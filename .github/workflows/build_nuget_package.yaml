@@ -32,10 +32,10 @@ jobs:
           echo "PACKAGE_VERSION=${PACKAGE_VERSION}" >> $GITHUB_OUTPUT
 
       - name: Build
-        run: dotnet build --configuration Release-Events --no-restore
+        run: dotnet build src/Arch/Arch.csproj --configuration Release-Events --no-restore
 
       - name: Pack
-        run: dotnet pack --configuration Release-Events --no-build --output ./output /p:PackageVersion=${{ steps.version_number.outputs.PACKAGE_VERSION }}
+        run: dotnet pack src/Arch/Arch.csproj --configuration Release-Events --no-build --output ./output /p:PackageVersion=${{ steps.version_number.outputs.PACKAGE_VERSION }}
 
       - name: Publish to GitHub Packages
         run: |
