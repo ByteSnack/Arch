@@ -22,7 +22,7 @@ jobs:
           python-version: '3.12'
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore src/Arch/Arch.csproj
 
       - name: Generate version number
         id: version_number
