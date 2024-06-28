@@ -1,0 +1,39 @@
+name: Publish NuGet Package
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Generate version number
+        id: version_number
+        shell: bash
+        run: |
+          PACKAGE_VERSION=$(python CodeGeneration/generate_version.py)
+          echo "PACKAGE_VERSION=${PACKAGE_VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Pack
+        run: dotnet pack --configuration Release --no-build --output ./output /p:PackageVersion=${{ steps.version_number.outputs.PACKAGE_VERSION }} /p:Configuration=Release-Events
+
+      - name: Publish to GitHub Packages
+        run: |
+          dotnet nuget add source --username USERNAME --password ${{ secrets.PACKAGE_KEY}} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/ByteSnack/index.json"
+          dotnet nuget push ./output/*.nupkg -k ${{ secrets.PACKAGE_KEY }} -s github --skip-duplicate
