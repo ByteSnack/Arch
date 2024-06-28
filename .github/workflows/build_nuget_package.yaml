@@ -28,7 +28,7 @@ jobs:
         id: version_number
         shell: bash
         run: |
-          PACKAGE_VERSION=$(python CodeGeneration/generate_version.py)
+          PACKAGE_VERSION=$(python generate_version.py)
           echo "PACKAGE_VERSION=${PACKAGE_VERSION}" >> $GITHUB_OUTPUT
 
       - name: Build
