@@ -3,6 +3,7 @@ using Arch.Core;
 using Arch.Core.Extensions;
 using Arch.Core.Extensions.Dangerous;
 using Arch.Core.Utils;
+using CommunityToolkit.HighPerformance;
 using static NUnit.Framework.Assert;
 
 namespace Arch.Tests;
@@ -16,8 +17,8 @@ public sealed partial class WorldTest
 {
     private World _world;
 
-    private readonly ComponentType[] _entityGroup = { typeof(Transform), typeof(Rotation) };
-    private readonly ComponentType[] _entityAiGroup = { typeof(Transform), typeof(Rotation), typeof(Ai) };
+    private readonly ComponentType[] _entityGroup = [typeof(Transform), typeof(Rotation)];
+    private readonly ComponentType[] _entityAiGroup = [typeof(Transform), typeof(Rotation), typeof(Ai)];
 
     [SetUp]
     public void Setup()
@@ -89,12 +90,12 @@ public sealed partial class WorldTest
     [Test]
     public void DestroyAll()
     {
-        var query = new QueryDescription { All = new ComponentType[] { typeof(Transform) } };
+        var query = new QueryDescription(all: [typeof(Transform)]);
 
-        var entities = new List<Entity>();
-        _world.GetEntities(query, entities);
+        var entities = new Entity[_world.CountEntities(query)];
+        _world.GetEntities(query, entities.AsSpan());
 
-        for (var i = 0; i < entities.Count; i++)
+        for (var i = 0; i < entities.Length; i++)
         {
             var entity = entities[i];
             _world.Destroy(entity);
@@ -356,22 +357,22 @@ public sealed partial class WorldTest
     {
         // Query
         var archTypes = new ComponentType[] { typeof(Transform) };
-        var query = new QueryDescription { All = archTypes };
+        var query = new QueryDescription(all: archTypes);
 
         // World
         using var world = World.Create();
         var entity = world.Create(archTypes);
 
         // Get entities
-        var entites = new List<Entity>();
-        world.GetEntities(query, entites);
+        var entites = new Entity[world.CountEntities(query)];
+        world.GetEntities(query, entites.AsSpan());
 
         That(entites.Count, Is.EqualTo(1));
 
         // Destroy the one entity
-        entites.Clear();
         world.Destroy(entity);
-        world.GetEntities(query, entites);
+        entites = new Entity[world.CountEntities(query)];
+        world.GetEntities(query, entites.AsSpan());
 
         That(entites.Count, Is.EqualTo(0));
     }
@@ -384,7 +385,7 @@ public sealed partial class WorldTest
     {
         // Query
         var archTypes = new ComponentType[] { typeof(Transform) };
-        var query = new QueryDescription { All = archTypes };
+        var query = new QueryDescription(all: archTypes);
 
         // World
         using var world = World.Create();
@@ -634,8 +635,8 @@ public partial class WorldTest
     {
         var entity = _world.Create(_entityGroup);
         var entity2 = _world.Create(_entityGroup);
-        _world.RemoveRange(entity, typeof(Transform));
-        _world.RemoveRange(entity2, typeof(Transform));
+        _world.RemoveRange(entity, new ComponentType[]{typeof(Transform)});
+        _world.RemoveRange(entity2, new ComponentType[]{typeof(Transform)});
 
         That(_world.GetArchetype(entity2), Is.EqualTo(_world.GetArchetype(entity)));
         That(_world.GetArchetype(entity).ChunkCount, Is.EqualTo(1));
@@ -650,8 +651,8 @@ public partial class WorldTest
     {
         var entity = _world.Create(_entityGroup);
         var entity2 = _world.Create(_entityGroup);
-        _world.AddRange(entity, new Ai());
-        _world.AddRange(entity2, new Ai());
+        _world.AddRange(entity, new object[]{new Ai()});
+        _world.AddRange(entity2, new object[]{new Ai()});
 
         _world.TryGetArchetype(_entityAiGroup, out var arch);
         That(_world.GetArchetype(entity2), Is.EqualTo(_world.GetArchetype(entity)));

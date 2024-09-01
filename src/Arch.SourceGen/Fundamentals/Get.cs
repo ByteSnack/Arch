@@ -38,7 +38,7 @@ public static class GetExtensions
 
         var template =
             $$"""
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
             [Pure]
             public void GetArray<{{generics}}>({{outs}})
             {
@@ -87,7 +87,7 @@ public static class GetExtensions
 
         var template =
             $$"""
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
             [Pure]
             public void GetSpan<{{generics}}>({{outs}})
             {
@@ -123,7 +123,7 @@ public static class GetExtensions
 
         var template =
             $$"""
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
             [Pure]
             public Components<{{generics}}> GetFirst<{{generics}}>()
             {
@@ -149,17 +149,17 @@ public static class GetExtensions
     {
         var generics = new StringBuilder().GenericWithoutBrackets(amount);
         var inParams = new StringBuilder().InsertGenericParams(amount);
-        var arrays = new StringBuilder().GetChunkArrays(amount);
+        var arrays = new StringBuilder().GetChunkFirstGenericElements(amount, "");
 
         var gets = new StringBuilder();
         for (var index = 0; index <= amount; index++)
         {
-            gets.AppendLine($"ref var t{index}Component = ref t{index}Array[index];");
+            gets.AppendLine($"ref var t{index}Component = ref Unsafe.Add(ref t{index}FirstElement, index);");
         }
 
         var template =
             $$"""
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
             [Pure]
             public Components<{{generics}}> Get<{{generics}}>(int index)
             {
@@ -186,24 +186,24 @@ public static class GetExtensions
     public static StringBuilder AppendChunkIndexGetRow(this StringBuilder sb, int amount)
     {
         var generics = new StringBuilder().GenericWithoutBrackets(amount);
-        var getArrays = new StringBuilder().GetChunkArrays(amount);
+        var getArrays = new StringBuilder().GetChunkFirstGenericElements(amount, "");
         var inParams = new StringBuilder().InsertGenericParams(amount);
 
         var gets = new StringBuilder();
         for (var index = 0; index <= amount; index++)
         {
-            gets.AppendLine($"ref var t{index}Component = ref t{index}Array[index];");
+            gets.AppendLine($"ref var t{index}Component = ref Unsafe.Add(ref t{index}FirstElement, index);");
         }
 
         var template =
             $$"""
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
             [Pure]
             public EntityComponents<{{generics}}> GetRow<{{generics}}>(int index)
             {
                 {{getArrays}}
 
-                ref var entity = ref Entities[index];
+                ref var entity = ref Entity(index);
                 {{gets}}
 
                 return new EntityComponents<{{generics}}>(ref entity, {{inParams}});
@@ -229,7 +229,7 @@ public static class GetExtensions
 
         var template =
             $$"""
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
             internal unsafe Components<{{generics}}> Get<{{generics}}>(scoped ref Slot slot)
             {
                 ref var chunk = ref GetChunk(slot.ChunkIndex);
@@ -256,12 +256,13 @@ public static class GetExtensions
 
         var template =
             $$"""
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
             [Pure]
             public Components<{{generics}}> Get<{{generics}}>(Entity entity)
             {
-                var slot = EntityInfo.GetSlot(entity.Id);
-                var archetype = EntityInfo.GetArchetype(entity.Id);
+                var entitySlot = EntityInfo.GetEntitySlot(entity.Id);
+                var slot = entitySlot.Slot;
+                var archetype = entitySlot.Archetype;
                 return archetype.Get<{{generics}}>(ref slot);
             }
             """;
@@ -285,7 +286,7 @@ public static class GetExtensions
 
         var template =
             $$"""
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
             [Pure]
             public static Components<{{generics}}> Get<{{generics}}>(this Entity entity)
             {

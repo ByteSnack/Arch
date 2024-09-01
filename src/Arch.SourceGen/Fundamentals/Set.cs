@@ -16,17 +16,17 @@ public static class SetExtensions
     {
         var generics = new StringBuilder().GenericWithoutBrackets(amount);
         var parameters = new StringBuilder().GenericInParams(amount);
-        var arrays = new StringBuilder().GetChunkArrays(amount);
+        var arrays = new StringBuilder().GetChunkFirstGenericElements(amount, "");
 
         var sets = new StringBuilder();
         for (var index = 0; index <= amount; index++)
         {
-            sets.AppendLine($"t{index}Array[index] = t{index}Component;");
+            sets.AppendLine($"Unsafe.Add(ref t{index}FirstElement, index) = t{index}Component;");
         }
 
         var template =
             $$"""
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
             public void Set<{{generics}}>(int index, {{parameters}})
             {
                 {{arrays}}
@@ -55,7 +55,7 @@ public static class SetExtensions
 
         var template =
             $$"""
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
             internal void Set<{{generics}}>(ref Slot slot, {{parameters}})
             {
                 ref var chunk = ref GetChunk(slot.ChunkIndex);
@@ -80,7 +80,7 @@ public static class SetExtensions
     {
         var generics = new StringBuilder().GenericWithoutBrackets(amount);
         var parameters = new StringBuilder().GenericInDefaultParams(amount,"ComponentValue");
-        var getFirstElements = new StringBuilder().GetFirstGenericElements(amount);
+        var getFirstElements = new StringBuilder().GetChunkFirstGenericElements(amount);
         var getComponents = new StringBuilder().GetGenericComponents(amount);
 
         var assignComponents = new StringBuilder();
@@ -91,7 +91,7 @@ public static class SetExtensions
 
         var template =
             $$"""
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
             internal void SetRange<{{generics}}>(in Slot from, in Slot to, {{parameters}})
             {
                 // Set the added component, start from the last slot and move down
@@ -143,11 +143,12 @@ public static class SetExtensions
 
         var template =
             $$"""
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
             public void Set<{{generics}}>(Entity entity, {{parameters}})
             {
-                var slot = EntityInfo.GetSlot(entity.Id);
-                var archetype = EntityInfo.GetArchetype(entity.Id);
+                var entitySlot = EntityInfo.GetEntitySlot(entity.Id);
+                var slot = entitySlot.Slot;
+                var archetype = entitySlot.Archetype;
                 archetype.Set<{{generics}}>(ref slot, {{insertParams}});
                 {{events}}
             }
@@ -174,7 +175,7 @@ public static class SetExtensions
 
         var template =
             $$"""
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
             public static void Set<{{generics}}>(this Entity entity, {{parameters}})
             {
                 var world = World.Worlds[entity.WorldId];

@@ -31,7 +31,7 @@ public static class StringBuilderHpQueryExtensions
             $$"""
             public interface {{interfaceInfo.Name}}<{{genericSb}}>
             {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
                 void Update({{paramSb}});
             }
             """;
@@ -81,13 +81,13 @@ public static class StringBuilderHpQueryExtensions
         for (var index = 0; index <= amount; index++)
         {
             var generics = new StringBuilder().GenericWithoutBrackets(index);
-            var getFirstElement = new StringBuilder().GetFirstGenericElements(index);
+            var getFirstElement = new StringBuilder().GetChunkFirstGenericElements(index);
             var getComponents = new StringBuilder().GetGenericComponents(index);
             var insertParams = new StringBuilder().InsertGenericParams(index);
 
             var template =
                 $$"""
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
                 public void InlineQuery<T,{{generics}}>(in QueryDescription description, ref T iForEach) where T : struct, IForEach<{{generics}}>
                 {
                     var query = Query(in description);
@@ -111,13 +111,13 @@ public static class StringBuilderHpQueryExtensions
         for (var index = 0; index <= amount; index++)
         {
             var generics = new StringBuilder().GenericWithoutBrackets(index);
-            var getFirstElement = new StringBuilder().GetFirstGenericElements(index);
+            var getFirstElement = new StringBuilder().GetChunkFirstGenericElements(index);
             var getComponents = new StringBuilder().GetGenericComponents(index);
             var insertParams = new StringBuilder().InsertGenericParams(index);
 
             var template =
                 $$"""
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
                 public void InlineQuery<T,{{generics}}>(in QueryDescription description) where T : struct, IForEach<{{generics}}>
                 {
                     var t = new T();
@@ -148,13 +148,13 @@ public static class StringBuilderHpQueryExtensions
         for (var index = 0; index <= amount; index++)
         {
             var generics = new StringBuilder().GenericWithoutBrackets(index);
-            var getFirstElement = new StringBuilder().GetFirstGenericElements(index);
+            var getFirstElement = new StringBuilder().GetChunkFirstGenericElements(index);
             var getComponents = new StringBuilder().GetGenericComponents(index);
             var insertParams = new StringBuilder().InsertGenericParams(index);
 
             var template =
                 $$"""
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
                 public void InlineEntityQuery<T,{{generics}}>(in QueryDescription description, ref T iForEach) where T : struct, IForEachWithEntity<{{generics}}>
                 {
                     var query = Query(in description);
@@ -181,13 +181,13 @@ public static class StringBuilderHpQueryExtensions
         for (var index = 0; index <= amount; index++)
         {
             var generics = new StringBuilder().GenericWithoutBrackets(index);
-            var getFirstElement = new StringBuilder().GetFirstGenericElements(index);
+            var getFirstElement = new StringBuilder().GetChunkFirstGenericElements(index);
             var getComponents = new StringBuilder().GetGenericComponents(index);
             var insertParams = new StringBuilder().InsertGenericParams(index);
 
             var template =
                 $$"""
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
                 public void InlineEntityQuery<T,{{generics}}>(in QueryDescription description) where T : struct, IForEachWithEntity<{{generics}}>
                 {
                     var t = new T();

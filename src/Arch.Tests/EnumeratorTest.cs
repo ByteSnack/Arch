@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices;
 using Arch.Core;
+using Arch.Core.Extensions;
 using Arch.Core.Utils;
 using static NUnit.Framework.Assert;
 
@@ -12,9 +13,9 @@ namespace Arch.Tests;
 [TestFixture]
 public sealed class EnumeratorTest
 {
-    private static readonly ComponentType[] _group = { typeof(Transform), typeof(Rotation) };
-    private static readonly ComponentType[] _otherGroup = { typeof(Transform), typeof(Rotation), typeof(Ai) };
-    private readonly QueryDescription _description = new() { All = _group };
+    private static readonly ComponentType[] _group = [typeof(Transform), typeof(Rotation)];
+    private static readonly ComponentType[] _otherGroup = [typeof(Transform), typeof(Rotation), typeof(Ai)];
+    private readonly QueryDescription _description = new(all: _group);
 
     private World _world;
 

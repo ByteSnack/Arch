@@ -13,7 +13,7 @@ public static class StringBuilderChunkJobExtensions
     public static void AppendForEachJob(this StringBuilder sb, int amount)
     {
         var generics = new StringBuilder().GenericWithoutBrackets(amount);
-        var getFirstElement = new StringBuilder().GetFirstGenericElements(amount);
+        var getFirstElement = new StringBuilder().GetChunkFirstGenericElements(amount);
         var getComponents = new StringBuilder().GetGenericComponents(amount);
         var insertParams = new StringBuilder().InsertGenericParams(amount);
 
@@ -23,7 +23,7 @@ public static class StringBuilderChunkJobExtensions
             {
                 public ForEach<{{generics}}> ForEach;
 
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
                 public void Execute(ref Chunk chunk)
                 {
                     var chunkSize = chunk.Size;
@@ -52,7 +52,7 @@ public static class StringBuilderChunkJobExtensions
     public static void AppendEntityForEachJob(this StringBuilder sb, int amount)
     {
         var generics = new StringBuilder().GenericWithoutBrackets(amount);
-        var getFirstElement = new StringBuilder().GetFirstGenericElements(amount);
+        var getFirstElement = new StringBuilder().GetChunkFirstGenericElements(amount);
         var getComponents = new StringBuilder().GetGenericComponents(amount);
         var insertParams = new StringBuilder().InsertGenericParams(amount);
 
@@ -62,7 +62,7 @@ public static class StringBuilderChunkJobExtensions
             {
                 public ForEachWithEntity<{{generics}}> ForEach;
 
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
                 public void Execute(ref Chunk chunk)
                 {
                     ref var entityFirstElement = ref chunk.Entity(0);
@@ -93,7 +93,7 @@ public static class StringBuilderChunkJobExtensions
     public static void AppendIForEachJob(this StringBuilder sb, int amount)
     {
         var generics = new StringBuilder().GenericWithoutBrackets(amount);
-        var getFirstElement = new StringBuilder().GetFirstGenericElements(amount);
+        var getFirstElement = new StringBuilder().GetChunkFirstGenericElements(amount);
         var getComponents = new StringBuilder().GetGenericComponents(amount);
         var insertParams = new StringBuilder().InsertGenericParams(amount);
 
@@ -103,7 +103,7 @@ public static class StringBuilderChunkJobExtensions
             {
                 public T ForEach;
 
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
                 public void Execute(ref Chunk chunk)
                 {
                     var chunkSize = chunk.Size;
@@ -132,7 +132,7 @@ public static class StringBuilderChunkJobExtensions
     public static void AppendIForEachWithEntityJob(this StringBuilder sb, int amount)
     {
         var generics = new StringBuilder().GenericWithoutBrackets(amount);
-        var getFirstElement = new StringBuilder().GetFirstGenericElements(amount);
+        var getFirstElement = new StringBuilder().GetChunkFirstGenericElements(amount);
         var getComponents = new StringBuilder().GetGenericComponents(amount);
         var insertParams = new StringBuilder().InsertGenericParams(amount);
 
@@ -142,7 +142,7 @@ public static class StringBuilderChunkJobExtensions
             {
                 public T ForEach;
 
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
                 public void Execute(ref Chunk chunk)
                 {
                     var chunkSize = chunk.Size;
