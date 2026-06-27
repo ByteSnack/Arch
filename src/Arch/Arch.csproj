@@ -31,8 +31,8 @@ Improved ASM-Code generation for improved performance for smaller querys.
 Removed several methods from arch to slim down the core. </PackageReleaseNotes>
     <PackageTags>c#;.net;.net8;.net10;ecs;game;entity;gamedev; game-development; game-engine; entity-component-system;stride;unity;godot;</PackageTags>
 
-    <PackageProjectUrl>https://github.com/genaray/Arch</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/genaray/Arch.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/ByteSnack/Arch</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ByteSnack/Arch.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <IsPackable>true</IsPackable>
 
