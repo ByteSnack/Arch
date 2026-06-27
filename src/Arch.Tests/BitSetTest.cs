@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using Arch.Core.Utils;
 using static NUnit.Framework.Assert;
+using static NUnit.Framework.Legacy.ClassicAssert;
 
 namespace Arch.Tests;
 

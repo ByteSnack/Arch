@@ -3,6 +3,7 @@ using Arch.Core;
 using Arch.Core.Utils;
 using Schedulers;
 using static NUnit.Framework.Assert;
+using static NUnit.Framework.Legacy.ClassicAssert;
 
 namespace Arch.Tests;
 
