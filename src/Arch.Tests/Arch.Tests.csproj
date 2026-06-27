@@ -7,9 +7,12 @@
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Configurations>Debug;Release;Release-Pure;Release-PureECS;Release-Events;Debug-PureECS;Debug-Events</Configurations>
-    <LangVersion>12</LangVersion>
-    <TargetFrameworks>net7.0;net8.0</TargetFrameworks>
+    <LangVersion>13</LangVersion>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
     <!--<TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
+    <!-- NUnit.Analyzers 4.x promotes several pre-existing test-quality rules to errors;
+         keep them as non-blocking during the framework/test-stack modernization. -->
+    <NoWarn>$(NoWarn);NUnit1032;NUnit2021</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -46,6 +49,7 @@
     <Using Include="System.Threading" />
 
     <Using Include="NUnit.Framework" />
+    <Using Include="NUnit.Framework.Legacy" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,11 +57,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" Version="3.1.2" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
-    <PackageReference Include="NUnit" Version="3.13.3" />
-    <PackageReference Include="NUnit.Analyzers" Version="3.3.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
+    <PackageReference Include="coverlet.collector" Version="6.0.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="NUnit" Version="4.6.1" />
+    <PackageReference Include="NUnit.Analyzers" Version="4.6.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>

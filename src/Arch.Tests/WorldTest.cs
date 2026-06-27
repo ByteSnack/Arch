@@ -5,6 +5,7 @@ using Arch.Core.Extensions.Dangerous;
 using Arch.Core.Utils;
 using CommunityToolkit.HighPerformance;
 using static NUnit.Framework.Assert;
+using static NUnit.Framework.Legacy.ClassicAssert;
 
 namespace Arch.Tests;
 
