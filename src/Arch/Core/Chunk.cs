@@ -407,6 +407,17 @@ public partial struct Chunk
     [Pure]
     public T[] GetArray<T>()
     {
+        // The Entity handle lives in the dedicated Entities array, not in Components. It is NOT part of
+        // an archetype's signature/lookup, so resolving it through ComponentIdToArrayIndex is only
+        // "valid" while Entity's lazily-assigned component id happens to fall within the per-archetype
+        // lookup length — once enough other components are registered first, Entity's id exceeds it and
+        // the lookup reads out of bounds (corruption). Route Entity straight to the dedicated array.
+        // The typeof check is a JIT-time constant, so this is free for non-Entity T.
+        if (typeof(T) == typeof(Entity))
+        {
+            return Unsafe.As<T[]>(Entities);
+        }
+
         var index = Index<T>();
         Debug.Assert(index != -1 && index < Components.Length, $"Index is out of bounds, component {typeof(T)} with id {index} does not exist in this chunk.");
 
